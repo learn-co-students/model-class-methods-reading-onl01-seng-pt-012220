@@ -6,12 +6,12 @@ class PostsController < ApplicationController
     
     # filter the @posts list based on user input
     if !params[:author].blank?
-      @posts = Post.by_author(params[:author])
+      @posts = Post.where(author: params[:author])
     elsif !params[:date].blank?
       if params[:date] == "Today"
-        @posts = Post.from_today
+        @posts = Post.where("created_at >=?", Time.zone.today.beginning_of_day)
       else
-        @posts = Post.old_news
+        @posts = Post.where("created_at <?", Time.zone.today.beginning_of_day)
       end
     else
       # if no filters are applied, show all posts
